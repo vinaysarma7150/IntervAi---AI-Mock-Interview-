@@ -52,26 +52,11 @@ function getAverageScore(rating) {
   return (total / values.length).toFixed(1);
 }
 
-function getQuestionFeedbackList(questionFeedback) {
-  if (!Array.isArray(questionFeedback)) {
-    return [];
-  }
-
-  return questionFeedback.filter(
-    (item) => item && (item.question || item.feedback || item.score !== undefined)
-  );
-}
-
 function CandidateFeedbackDialog({ candidate, jobPosition }) {
   const feedbackPayload = getFeedbackPayload(candidate?.feedback);
   const rating = feedbackPayload?.rating || {};
   const summary =
     feedbackPayload?.summary || "No performance summary is available.";
-  const recommendation =
-    feedbackPayload?.recommendation || "No recommendation available.";
-  const recommendationMsg =
-    feedbackPayload?.recommendationMsg || "No recommendation message is available.";
-  const questionFeedbackList = getQuestionFeedbackList(feedbackPayload?.questionFeedback);
   const averageScore = getAverageScore(rating);
   const initials = candidate?.userName
     ?.split(" ")
@@ -132,55 +117,6 @@ function CandidateFeedbackDialog({ candidate, jobPosition }) {
             <div className="mt-4 rounded-2xl border border-border bg-muted/40 p-6 text-base leading-8 text-muted-foreground dark:border-white/8 dark:bg-[#11203a]/82">
               {summary}
             </div>
-          </div>
-
-          <div>
-            <h3 className="text-2xl font-bold text-card-foreground">Hiring Recommendation</h3>
-
-            <div className="mt-4 rounded-2xl border border-border bg-muted/40 p-6 dark:border-white/8 dark:bg-[#11203a]/82">
-              <p className="text-lg font-semibold text-card-foreground">{recommendation}</p>
-              <p className="mt-2 text-base leading-7 text-muted-foreground">
-                {recommendationMsg}
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-2xl font-bold text-card-foreground">Question-wise Feedback</h3>
-
-            {questionFeedbackList.length ? (
-              <div className="mt-5 space-y-4">
-                {questionFeedbackList.map((item, index) => (
-                  <div
-                    key={`${item?.question || "question"}-${index}`}
-                    className="rounded-2xl border border-border bg-muted/40 p-5 dark:border-white/8 dark:bg-[#11203a]/82"
-                  >
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-200">
-                          Question {index + 1}
-                        </p>
-                        <p className="mt-2 text-base font-semibold leading-7 text-card-foreground">
-                          {item?.question || "Question text unavailable"}
-                        </p>
-                      </div>
-
-                      <div className="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 dark:bg-[#163157] dark:text-blue-200">
-                        {Number(item?.score) || 0}/10
-                      </div>
-                    </div>
-
-                    <div className="mt-4 whitespace-pre-line text-sm leading-7 text-muted-foreground">
-                      {item?.feedback || "No detailed feedback available for this question."}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="mt-4 rounded-2xl border border-dashed border-border px-4 py-6 text-sm text-muted-foreground dark:border-white/10 dark:bg-[#11203a]/60">
-                Question-wise feedback is not available for this submission.
-              </div>
-            )}
           </div>
         </div>
       </DialogContent>
