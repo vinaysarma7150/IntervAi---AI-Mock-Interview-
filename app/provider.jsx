@@ -1,5 +1,5 @@
 "use client"
-import { UserDetailContext } from '@/context/UserDEtailContext';
+import { UserDetailContext } from '@/context/UserDetailContext';
 import { supabase } from '@/services/supabaseClient'
 import { ThemeProvider } from 'next-themes';
 import React, { useContext, useEffect, useState } from 'react'
