@@ -9,7 +9,7 @@ export async function POST(req) {
     const FINAL_PROMPT =  `
 {{conversation}}
 
-Depends on this Interview Conversation between assistant and user, give feedback for the user interview.
+Based on this interview conversation between the assistant and the user, evaluate the candidate's interview performance.
 
 Give rating out of 10 for:
 - Technical Skills
@@ -18,33 +18,45 @@ Give rating out of 10 for:
 - Experience
 
 Also give:
-- Summary in 3 lines about the interview
-- One line telling whether the candidate is recommended for hire with a message
+- Summary in exactly 3 concise lines about the interview
+- One line telling whether the candidate is recommended for hire
+- A short recommendation message
+- Feedback for each interview question asked by the assistant
 
-Return the response in JSON format:
+For each question in questionFeedback:
+- include the exact or closest question text
+- give a score out of 10
+- give 2 to 3 lines of feedback focused on the candidate's answer for that specific question
+
+Important:
+- Return only valid JSON
+- Do not include markdown fences
+- Do not include any extra text outside the JSON
+- questionFeedback must be an array
+
+Return the response in this JSON format:
 
 {
-  feedback: {
-    rating: {
-      technicalSkills: 5,
-      communication: 6,
-      problemSolving: 4,
-      experience: 7
+  "feedback": {
+    "rating": {
+      "technicalSkills": 5,
+      "communication": 6,
+      "problemSolving": 4,
+      "experience": 7
     },
-    summary: "<in 3 lines>",
-    recommendation: "",
-    recommendationMsg: ""
+    "summary": "Line 1\\nLine 2\\nLine 3",
+    "recommendation": "Recommended",
+    "recommendationMsg": "Strong fundamentals with a few areas to improve.",
+    "questionFeedback": [
+      {
+        "question": "Tell me about yourself.",
+        "score": 7,
+        "feedback": "You gave a clear introduction with relevant background.\\nYour answer would be stronger with more measurable impact.\\nMentioning one standout project would add more depth."
+      }
+    ]
   }
 }
 `.replace('{{conversation}}', JSON.stringify(conversation));
-
-
-
-
-
-
-
-
 
 
 
