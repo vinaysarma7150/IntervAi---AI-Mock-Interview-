@@ -10,9 +10,18 @@ const Login = ()=>{
 
     //Used to sign  in with google
     const signInWithGoogle = async () =>{
+            const redirectTo =
+                typeof window !== "undefined"
+                    ? `${window.location.origin}/dashboard`
+                    : undefined;
 
             const {error} = await supabase.auth.signInWithOAuth(
-                {provider : 'google'}
+                {
+                    provider : 'google',
+                    options: {
+                        redirectTo,
+                    },
+                }
             );
 
             if(error){
