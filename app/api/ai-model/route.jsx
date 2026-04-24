@@ -50,6 +50,17 @@ export async function POST(req) {
         text = response.text();
         break;
       } catch (error) {
+        if (
+          error?.status === 503 ||
+          error?.message?.includes("503 Service Unavailable") ||
+          error?.message?.includes("currently experiencing high demand")
+        ) {
+          return NextResponse.json(
+            { error: "Gemini is busy right now. Please try again later." },
+            { status: 503 }
+          );
+        }
+
         lastError = error;
       }
     }
@@ -63,6 +74,18 @@ export async function POST(req) {
     });
   } catch (error) {
     console.error(error);
+
+    if (
+      error?.status === 503 ||
+      error?.message?.includes("503 Service Unavailable") ||
+      error?.message?.includes("currently experiencing high demand")
+    ) {
+      return NextResponse.json(
+        { error: "Gemini is busy right now. Please try again later." },
+        { status: 503 }
+      );
+    }
+
     const message =
       error?.message ||
       error?.errorDetails?.map((item) => item.reason).join(", ") ||

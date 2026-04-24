@@ -12,6 +12,7 @@ function QuestionList({formData, onCreateLink}) {
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [questionList,setQuestionList] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [saveLoading,setSaveLoading] = useState(false);
     
@@ -24,6 +25,7 @@ function QuestionList({formData, onCreateLink}) {
 
     const GenerateQuestionList = async () => {
       setLoading(true);
+      setErrorMessage("");
       try{
         const result  = await axios.post('/api/ai-model', {
           ...formData
@@ -50,12 +52,17 @@ function QuestionList({formData, onCreateLink}) {
         }));
 
         setQuestionList(formattedQuestions);
+        setErrorMessage("");
         // console.log(questions);
 
       }
       catch(e){
         console.log(e)
         console.log(e?.response?.data)
+        setQuestionList([]);
+        setErrorMessage(
+          e?.response?.data?.error || "Failed to generate questions. Please try again."
+        );
       }
       finally{
         setLoading(false);
@@ -132,6 +139,12 @@ function QuestionList({formData, onCreateLink}) {
           </p>
         </div>
 
+      </div>
+    )}
+
+    {!loading && errorMessage && (
+      <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-500/20 dark:bg-[#3a1620] dark:text-red-200">
+        {errorMessage}
       </div>
     )}
 

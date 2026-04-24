@@ -1,5 +1,4 @@
 "use client";
-
 import { useUser } from "@/app/provider";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/services/supabaseClient";
